@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="chatbox">
+        <div id="chatLog" class="chat-log"></div>
+        <input type="text" id="userInput" class="chat-input" placeholder="Type one emotion">
+        <button id="send-button" class="send-button" disabled>Send</button>
+
+    </div>
+    
+    <div class="recommendations">
+        <h3>Movie Recommendations</h3>
+        <label>Sort by: </label>
+        <select id="sortCriteriaGenre">
+            <option value="all">All Genres</option>
+            <!-- Additional genres will be populated here by JavaScript -->
+        </select>
+        
+        <select id="sortCriteriaDecade">
+            <option value="all">All Decades</option>
+            <!-- Decades will be populated based on the movies' release dates -->
+        </select>
+        <button id="sortButton">Sort</button>
+        <div id="movieList"></div>
+    </div>
+    
+    
+    <script src="data.json"></script> 
+    <script src="scripts.js"></script>
+</body>
+</html>
+
