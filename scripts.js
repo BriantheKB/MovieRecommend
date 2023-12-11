@@ -2,7 +2,7 @@
 // Global Variables
 let moviesData = [];
 
-const emotionToMoodMapping = {
+const emotionToMoodMapping = { 
     "happy": ["Joyful", "Cheerful", "Playful", "Excited", "Energetic", "Whimsical"],
     "sad": ["Somber", "Nostalgic", "Reflective"],
     "curious": ["Inquisitive", "Curious", "Puzzled", "Perplexed"],
@@ -119,34 +119,58 @@ function getMoviesByMood(mood) {
 
 function displayRecommendations(movies) {
     let movieListDiv = document.getElementById('movieList');
-    movieListDiv.innerHTML = '<strong>Top 10 Recommendations:</strong><br>';
-    movies.slice(0, 10).forEach((movie, index) => {
+    movieListDiv.innerHTML = '<strong>Top 50 Recommendations:</strong><br>';
+    movies.slice(0, 50).forEach((movie, index) => {
         movieListDiv.innerHTML += `<div>${index + 1}. ${movie.title} (${movie.release_year}, Genre: ${movie.primary_genre}) - Rating: ${movie.vote_average}</div>`;
     });
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
     let chatLog = document.getElementById("chatLog");
-    chatLog.innerHTML += '<div>Bot: Hello! How are you feeling today? Tell me an emotion, and I\'ll recommend a movie for you.</div>';
+    chatLog.innerHTML += '<div>Bot: Hello! How are you feeling today? Select an emotion from the dropdown, and I\'ll recommend a movie for you.</div>';
+    populateDropdowns();  // Ensure dropdowns are populated
+    populateEmotionDropdown(); // Initialize the emotion dropdown
 });
 
-document.getElementById('userInput').addEventListener('input', function() {
-    if (this.value.trim() !== "") {
-        document.getElementById('send-button').disabled = false;
-    } else {
-        document.getElementById('send-button').disabled = true;
+
+function populateEmotionDropdown() {
+    const select = document.getElementById('emotionSelect');
+    Object.keys(emotionToMoodMapping).forEach(emotion => {
+        let option = document.createElement('option');
+        option.value = emotion;
+        option.textContent = emotion;
+        select.appendChild(option);
+    });
+}
+
+document.getElementById('emotionSelect').addEventListener('change', function() {
+    const selectedEmotion = this.value;
+    if (selectedEmotion) {
+        let chatLog = document.getElementById('chatLog');
+        chatLog.innerHTML += `<div class="user-message">User: ${selectedEmotion}</div>`;
+        let botResponse = getResponse(selectedEmotion);
+        chatLog.innerHTML += `<div class="bot-message">Bot: ${botResponse}</div>`;
     }
 });
 
-document.getElementById('send-button').addEventListener('click', function() {
-    let userInput = document.getElementById('userInput').value;
-    let chatLog = document.getElementById('chatLog');
+function sortAndDisplayMovies() {
+    let genreFilter = document.getElementById('sortCriteriaGenre').value;
+    let decadeFilter = document.getElementById('sortCriteriaDecade').value;
 
-    chatLog.innerHTML += `<div class="user-message">User: ${userInput}</div>`;
-    let botResponse = getResponse(userInput);
-    chatLog.innerHTML += `<div class="bot-message">Bot: ${botResponse}</div>`;
-    document.getElementById('userInput').value = '';
-});
+    let sortedAndFilteredMovies = moviesData.filter(movie => {
+        let matchesGenre = genreFilter === 'all' || movie.primary_genre === genreFilter;
+        let matchesDecade = decadeFilter === 'all' || movie.decade === decadeFilter;
+        return matchesGenre && matchesDecade;
+    });
+
+    // Sort by rating in descending order
+    sortedAndFilteredMovies.sort((a, b) => b.vote_average - a.vote_average);
+
+    displayRecommendations(sortedAndFilteredMovies);
+}
+
+document.getElementById('sortButton').addEventListener('click', sortAndDisplayMovies);
+
 
 // Load movies data
 fetch('data.json')
