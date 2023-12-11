@@ -9,9 +9,15 @@
 <body>
     <div class="chatbox">
         <div id="chatLog" class="chat-log"></div>
-        <input type="text" id="userInput" class="chat-input" placeholder="Type one emotion">
-        <button id="send-button" class="send-button" disabled>Send</button>
 
+        <!-- Emotion Selection Dropdown -->
+        <select id="emotionSelect">
+            <option value="">Select an Emotion</option>
+            <!-- Options will be added here by JavaScript -->
+        </select>
+
+        <input type="text" id="userInput" class="chat-input" placeholder="Type one emotion" style="display: none;">
+        <button id="send-button" class="send-button" disabled>Send</button>
     </div>
     
     <div class="recommendations">
@@ -29,7 +35,6 @@
         <button id="sortButton">Sort</button>
         <div id="movieList"></div>
     </div>
-    
     
     <script src="data.json"></script> 
     <script src="scripts.js"></script>
